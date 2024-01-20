@@ -9,11 +9,23 @@ class Cache(object):
         Cache.__token_info = token_info
 
     @staticmethod
-    def get_access_token() -> str:
+    def get_access_token() -> str|bool:
+        """
+        アクセストークンを返す。
+        期限切れの場合はFalseを返す。
+        """
         if Cache.__token_info == {}:
             raise Exception("cache is empty.")
         if Cache.__token_info["expires_at"] < datetime.datetime.now().timestamp():
-            # logger.info("access_token is expired.")
-            # FIXME: ここでrefresh_tokenを使って、access_tokenを更新する
-            raise Exception("access_token is expired.")
+            return False
         return Cache.__token_info["access_token"]
+
+
+    @staticmethod
+    def get_refresh_token() -> str:
+        """
+        リフレッシュトークンを返す。
+        """
+        if Cache.__token_info == {}:
+            raise Exception("cache is empty.")
+        return Cache.__token_info["refresh_token"]

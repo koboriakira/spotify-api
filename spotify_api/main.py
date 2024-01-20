@@ -4,8 +4,8 @@ from mangum import Mangum
 from fastapi import FastAPI, Header, Response, Request, HTTPException
 from spotipy.oauth2 import SpotifyOAuth
 from custom_logger import get_logger
-# from interface.track_response import TrackResponse
-# from interface import track
+from interface.track_response import TrackResponse
+from interface import track
 from cache import Cache
 
 logger = get_logger(__name__)
@@ -72,11 +72,11 @@ async def authorize_callback(request: Request):
     return token_info
 
 
-# @app.get("/track/{track_id}", response_model=Optional[TrackResponse],)
-# def get_track(track_id: str,
-#               accsses_token: str = Header(None)):
-#     # valid_saccess_token(accsses_token)
-#     return track.get_track(track_id=track_id)
+@app.get("/track/{track_id}", response_model=Optional[TrackResponse],)
+def get_track(track_id: str,
+              accsses_token: str = Header(None)):
+    # valid_saccess_token(accsses_token)
+    return track.get_track(track_id=track_id)
 
 
 @app.get("/healthcheck")
