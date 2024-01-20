@@ -56,8 +56,6 @@ async def authorize_callback(request: Request):
     Spotifyの認証後のコールバック用URL。
     get_access_token() -> Spotifyの認証画面 -> authorize_callback()とリダイレクトされる。
     """
-    global cache
-
     # 認証コードを取得
     code = request.query_params.get('code')
     if code is None:
@@ -77,6 +75,16 @@ def get_track(track_id: str,
               accsses_token: str = Header(None)):
     # valid_saccess_token(accsses_token)
     return track.get_track(track_id=track_id)
+
+
+
+@app.get("/current/playing", response_model=Optional[TrackResponse])
+async def get_current_playing():
+    """
+    現在流れている曲を取得する
+    """
+    return track.get_current_playing()
+
 
 
 @app.get("/healthcheck")

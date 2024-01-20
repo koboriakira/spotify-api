@@ -48,12 +48,12 @@ class Spotipy:
             return None
         return TrackTranslator.from_entity(track_entity)
 
-    # def get_playing(self) -> Optional[Track]:
-    #     playing_track = self.sp.current_user_playing_track()
-    #     if playing_track is None:
-    #         return None
-    #     logger.debug(playing_track)
-    #     return TrackTranslator.from_entity(playing_track["item"])
+    def get_current_playing(self) -> Optional[Track]:
+        playing_track = self.sp.current_user_playing_track()
+        if playing_track is None:
+            return None
+        logger.debug(playing_track)
+        return TrackTranslator.from_entity(playing_track["item"])
 
     def get_album(self, album_id: str):
         raise NotImplementedError()
