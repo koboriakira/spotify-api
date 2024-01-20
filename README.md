@@ -6,6 +6,7 @@
 
 http://localhost:10120/track/2dXME00xUY1CRcMZsM3Y4q
 https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/track/2dXME00xUY1CRcMZsM3Y4q
+https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/current/playing
 
 ### とくにアクセストークンの取得について
 
