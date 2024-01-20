@@ -14,7 +14,7 @@ class Cache(object):
         アクセストークンを返す。
         期限切れの場合はFalseを返す。
         """
-        if Cache.__token_info == {}:
+        if Cache.__token_info is None:
             raise Exception("cache is empty.")
         if Cache.__token_info["expires_at"] < datetime.datetime.now().timestamp():
             return False
