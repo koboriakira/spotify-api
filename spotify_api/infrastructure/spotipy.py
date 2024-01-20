@@ -57,3 +57,31 @@ class Spotipy:
 
     def get_album(self, album_id: str):
         raise NotImplementedError()
+
+    @classmethod
+    def get_authorize_url(cls) -> str:
+        sp_oauth = SpotifyOAuth(client_id=cls.CLIENT_ID,
+                client_secret=cls.CLIENT_SECRET,
+                redirect_uri=cls.get_callback_url(),
+                scope=cls.SCOPE)
+        return sp_oauth.get_authorize_url()
+
+    @classmethod
+    def get_callback_url(cls) -> str:
+        """ 認証のコールバック用URLを取得 """
+        # NOTE: 返却値が変わる場合は、Spotifyのアプリ設定画面のRedirect URIsも変更する必要がある
+        path = "authorize_callback"
+        if os.getenv('ENVIRONMENT') == "dev":
+            return f"http://localhost:10120/{path}"
+        else:
+            return f"https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/{path}"
+
+    @classmethod
+    def authorize_callback(cls, code: str) -> dict:
+        sp_oauth = SpotifyOAuth(client_id=cls.CLIENT_ID,
+                        client_secret=cls.CLIENT_SECRET,
+                        redirect_uri=cls.get_callback_url(),
+                        scope=cls.SCOPE)
+        token_info = sp_oauth.get_access_token(code)
+        Cache.write_token_info(token_info)
+        return token_info

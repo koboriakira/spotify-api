@@ -43,6 +43,11 @@ class Track:
         uri = obj["uri"]
         return Track(album, artists, available_markets, disc_number, duration_ms, explicit, external_ids, external_urls, href, id, is_local, name, popularity, preview_url, track_number, type, uri)
 
+    def title_for_slack(self) -> str:
+        artist_name_list = [artist["name"] for artist in self.artists]
+        artist_names = ", ".join(artist_name_list)
+        return f"{artist_names} - {self.name}"
+
     @property
     def spotify_url(self) -> Optional[str]:
         return self.external_urls["spotify"]
