@@ -4,6 +4,9 @@ from mangum import Mangum
 from fastapi import FastAPI, Header, Response, Request, HTTPException
 from spotipy.oauth2 import SpotifyOAuth
 from custom_logger import get_logger
+# from interface.track_response import TrackResponse
+# from interface import track
+from cache import Cache
 
 logger = get_logger(__name__)
 logger.info("start")
@@ -14,9 +17,6 @@ SPOTIFY_CLIENT_SECRET = os.environ.get("SPOTIFY_CLIENT_SECRET")
 SCOPE = 'user-library-read,user-top-read,user-read-currently-playing'
 ENVIRONMENT = os.environ.get("ENVIRONMENT")
 
-# access_token_callback()で取得したtoken_info変数をそのままキャッシュする
-cache = {}
-logger.info("cache: " + str(cache))
 
 def valid_saccess_token(secret: str) -> None:
     if ENVIRONMENT == "dev":
@@ -33,17 +33,6 @@ def get_callback_url() -> str:
         return f"http://localhost:10120/{path}"
     else:
         return f"https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/{path}"
-
-def get_access_token() -> str:
-    global cache
-    import datetime
-    if cache == {}:
-        raise Exception("cache is empty.")
-    if cache["expires_at"] < datetime.datetime.now().timestamp():
-        logger.info("access_token is expired.")
-        # FIXME: ここでrefresh_tokenを使って、access_tokenを更新する
-        raise Exception("access_token is expired.")
-    return cache["access_token"]
 
 app = FastAPI(
     title="My Spotify API",
@@ -79,15 +68,14 @@ async def authorize_callback(request: Request):
                     redirect_uri=get_callback_url(),
                     scope=SCOPE)
     token_info = sp_oauth.get_access_token(code)
-    cache = token_info
-    logger.info("access_token: " + get_access_token())
+    Cache.write_token_info(token_info)
     return token_info
 
 
 # @app.get("/track/{track_id}", response_model=Optional[TrackResponse],)
 # def get_track(track_id: str,
 #               accsses_token: str = Header(None)):
-#     valid_saccess_token(accsses_token)
+#     # valid_saccess_token(accsses_token)
 #     return track.get_track(track_id=track_id)
 
 
@@ -105,7 +93,7 @@ def hello():
 @app.get("/check_access_token")
 def hello():
     return {
-        'access_token': get_access_token(),
+        'access_token': Cache.get_access_token(),
     }
 
 
