@@ -10,5 +10,5 @@ RUN apt clean
 # Python dependencies
 RUN pip install --upgrade pip && \
     pip install pipenv
-COPY Pipfile Pipfile.lock ./
+COPY Pipfile ./
 RUN pipenv install --dev
