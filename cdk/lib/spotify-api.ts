@@ -9,6 +9,8 @@ import {
   aws_iam as iam,
   aws_apigateway as apigateway,
   aws_s3 as s3,
+  aws_events as events,
+  aws_events_targets as targets,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -52,6 +54,14 @@ export class SpotifyApi extends Stack {
       role,
       myLayer
     );
+    // new events.Rule(this, "notificate_current_playing", {
+    //   schedule: events.Schedule.cron({ minute: "0/1" }), // 毎分実行
+    //   targets: [
+    //     new targets.LambdaFunction(notificate_current_playing, {
+    //       retryAttempts: 1,
+    //     }),
+    //   ],
+    // });
   }
 
   /**
