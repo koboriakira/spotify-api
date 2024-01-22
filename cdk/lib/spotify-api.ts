@@ -54,7 +54,7 @@ export class SpotifyApi extends Stack {
       role,
       myLayer
     );
-    new events.Rule(this, "notificate_current_playing", {
+    new events.Rule(this, "NotificateCurrentPlaying", {
       schedule: events.Schedule.cron({ minute: "0/1" }), // 毎分実行
       targets: [
         new targets.LambdaFunction(notificate_current_playing, {
