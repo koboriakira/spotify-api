@@ -6,6 +6,7 @@ from custom_logger import get_logger
 
 BUCKET_NAME = "spotify-api-bucket-koboriakira"
 FILE_NAME = "token_info.json"
+FILE_PATH = "/tmp/" + FILE_NAME
 
 logger = get_logger(__name__)
 
@@ -15,11 +16,11 @@ class TokenInfoS3Repository(TokenInfoRepository):
         トークン情報を保存する
         """
         # token_info.jsonを出力
-        with open(FILE_NAME, 'w') as f:
+        with open(FILE_PATH, 'w') as f:
             json.dump(token_info, f, indent=4)
 
         # S3にアップロード
-        is_success = self.upload_to_s3(FILE_NAME)
+        is_success = self.upload_to_s3(FILE_PATH)
         logger.info("is_success: " + str(is_success))
         return is_success
 
