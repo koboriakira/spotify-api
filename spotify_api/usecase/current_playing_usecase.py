@@ -3,6 +3,7 @@ from infrastructure.spotipy import Spotipy
 from domain.model.track import Track
 from custom_logger import get_logger
 from util.datetime import get_current_day_and_tomorrow
+from domain.slack.block_builder import BlockBuilder
 
 logger = get_logger(__name__)
 
@@ -13,11 +14,18 @@ class CurrentPlayingUsecase:
     def get_current_playing(self) -> Optional[Track]:
         return self.spotipy.get_current_playing()
 
-    def notificate_current_playing(self) -> None:
+    def notificate_current_playing(self) -> dict:
         track = self.get_current_playing()
         if track is None:
-            return
+            return {
+                "status": "info",
+                "message": "no track is playing now."
+            }
         self._post_to_slack(track=track)
+        return {
+            "status": "success",
+            "message": track.title_for_slack()
+        }
 
     def _post_to_slack(self, track: Track) -> None:
         # 面倒だし使い回さないので、このファイルに実装する
@@ -52,11 +60,28 @@ class CurrentPlayingUsecase:
                         pass
 
         # Slackに投稿する
+        artist_name_list = [artist["name"] for artist in track.artists]
+        section_text = f"<{track.spotify_url}|{track.title_for_slack()}>"
+        block_builder = BlockBuilder().add_section(text=section_text)
+        block_builder = block_builder.add_button_action(
+            action_id="LOVE_SPOTIFY_TRACK",
+            text="Love",
+            value=track.id,
+            style="primary")
+        context = {
+            "spotify_track_id": track.id,
+            "artist": artist_name_list,
+            "title": track.name,
+        }
+        block_builder = block_builder.add_context(text=context)
+        blocks = block_builder.build()
+
         logger.info("chat.postMessage")
         url = "https://slack.com/api/chat.postMessage"
         payload = json.dumps({
             "channel": "C05HGA2TK26", # musicチャンネル
-            "text": f"[Playing...] {track.title_for_slack()}"
+            "text": f"[Playing...] {track.title_for_slack()}",
+            "blocks": blocks,
         })
         headers = {
             'Authorization': 'Bearer ' + os.environ["SLACK_BOT_TOKEN"],

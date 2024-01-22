@@ -20,6 +20,6 @@ def get_current_playing() -> Optional[TrackResponse]:
         return None
     return TrackResponseTranslator.to_entity(track)
 
-def post_current_playing() -> None:
+def post_current_playing() -> dict:
     current_playing_usecase = CurrentPlayingUsecase()
-    current_playing_usecase.notificate_current_playing()
+    return current_playing_usecase.notificate_current_playing()
