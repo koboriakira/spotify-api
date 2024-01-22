@@ -5,7 +5,7 @@ CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 SCOPE = 'user-library-read,user-top-read,user-read-currently-playing'
 
-def get_callback_url(cls) -> str:
+def get_callback_url() -> str:
     """ 認証のコールバック用URLを取得 """
     # NOTE: 返却値が変わる場合は、Spotifyのアプリ設定画面のRedirect URIsも変更する必要がある
     path = "authorize_callback"

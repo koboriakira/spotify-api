@@ -5,7 +5,6 @@ from fastapi import FastAPI, Header, Response, Request, HTTPException
 from custom_logger import get_logger
 from interface.track_response import TrackResponse
 from interface import track, authorize
-from cache import Cache
 
 logger = get_logger(__name__)
 logger.info("start")
@@ -82,12 +81,6 @@ def hello():
     logger.info("healthcheck")
     return {
         'status': 'ok',
-    }
-
-@app.get("/check_access_token")
-def hello():
-    return {
-        'access_token': Cache.get_access_token(),
     }
 
 
