@@ -54,14 +54,14 @@ export class SpotifyApi extends Stack {
       role,
       myLayer
     );
-    // new events.Rule(this, "notificate_current_playing", {
-    //   schedule: events.Schedule.cron({ minute: "0/1" }), // 毎分実行
-    //   targets: [
-    //     new targets.LambdaFunction(notificate_current_playing, {
-    //       retryAttempts: 1,
-    //     }),
-    //   ],
-    // });
+    new events.Rule(this, "notificate_current_playing", {
+      schedule: events.Schedule.cron({ minute: "0/1" }), // 毎分実行
+      targets: [
+        new targets.LambdaFunction(notificate_current_playing, {
+          retryAttempts: 1,
+        }),
+      ],
+    });
   }
 
   /**
