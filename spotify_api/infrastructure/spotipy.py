@@ -21,7 +21,8 @@ class Spotipy:
         self.sp = sp
 
     @classmethod
-    def get_instance(cls) -> 'Spotipy':
+    def get_instance(cls, token_info: Optional[dict] = None) -> 'Spotipy':
+        logger.info("token_info: " + str(token_info))
         access_token = Cache.get_access_token()
         if access_token:
             return cls(spotipy.Spotify(auth=access_token))

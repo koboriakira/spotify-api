@@ -4,12 +4,15 @@ from domain.model.track import Track
 from custom_logger import get_logger
 from util.datetime import get_current_day_and_tomorrow
 from domain.slack.block_builder import BlockBuilder
+from domain.infrastructure.token_info_repository import TokenInfoRepository
+
 
 logger = get_logger(__name__)
 
 class CurrentPlayingUsecase:
-    def __init__(self):
-        self.spotipy = Spotipy.get_instance()
+    def __init__(self, token_repository: TokenInfoRepository):
+        token_info = token_repository.load()
+        self.spotipy = Spotipy.get_instance(token_info=token_info)
 
     def get_current_playing(self) -> Optional[Track]:
         return self.spotipy.get_current_playing()
