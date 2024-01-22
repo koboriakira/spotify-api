@@ -20,12 +20,12 @@ class TokenInfoS3Repository(TokenInfoRepository):
             json.dump(token_info, f, indent=4)
 
         # S3にアップロード
-        is_success = self.upload_to_s3(FILE_PATH)
+        is_success = self.upload_to_s3()
         logger.info("is_success: " + str(is_success))
         return is_success
 
 
-    def upload_to_s3(self, file_name: str) -> bool:
+    def upload_to_s3(self) -> bool:
         """
         ファイルをS3バケットにアップロードする関数
         :param file_name: アップロードするファイルのパス
@@ -40,7 +40,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
 
         try:
             # ファイルをアップロード
-            s3_client.upload_file(file_name, BUCKET_NAME, file_name)
+            s3_client.upload_file(FILE_PATH, BUCKET_NAME, FILE_NAME)
         except FileNotFoundError:
             logger.error("ファイルが見つかりませんでした。")
             return False
