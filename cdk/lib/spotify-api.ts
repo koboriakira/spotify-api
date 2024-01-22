@@ -4,9 +4,11 @@ import {
   Stack,
   StackProps,
   Duration,
+  RemovalPolicy,
   aws_lambda as lambda,
   aws_iam as iam,
   aws_apigateway as apigateway,
+  aws_s3 as s3,
 } from "aws-cdk-lib";
 import { Construct } from "constructs";
 
@@ -25,6 +27,12 @@ export class SpotifyApi extends Stack {
     const myLayer = this.makeLayer();
     const fn = this.createLambdaFunction(role, myLayer);
     this.makeApiGateway(fn);
+
+    // S3バケットを作成
+    const bucket = new s3.Bucket(this, "SpotifyApiBucket", {
+      bucketName: "spotify-api-bucket-koboriakira",
+      removalPolicy: RemovalPolicy.DESTROY,
+    });
   }
 
   /**
