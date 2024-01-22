@@ -29,10 +29,29 @@ export class SpotifyApi extends Stack {
       removalPolicy: RemovalPolicy.DESTROY,
     });
 
+    // ロールを作成
     const role = this.makeRole(bucket.bucketArn);
+
+    // レイヤーを作成
     const myLayer = this.makeLayer();
-    const fn = this.createLambdaFunction(role, myLayer);
+
+    // Lambda: main
+    const fn = this.createLambdaFunction(
+      "Lambda",
+      "main.handler",
+      role,
+      myLayer,
+      true
+    );
     this.makeApiGateway(fn);
+
+    // Lambda: notificate_current_playing
+    const notificate_current_playing = this.createLambdaFunction(
+      "notificate_current_playing",
+      "notificate_current_playing.handler",
+      role,
+      myLayer
+    );
   }
 
   /**
@@ -87,12 +106,15 @@ export class SpotifyApi extends Stack {
    * @returns {lambda.Function} The created Lambda function.
    */
   createLambdaFunction(
+    name: string,
+    handler_name: string,
     role: iam.Role,
-    myLayer: lambda.LayerVersion
+    myLayer: lambda.LayerVersion,
+    function_url_enabled: boolean = false
   ): lambda.Function {
-    const fn = new lambda.Function(this, "Lambda", {
+    const fn = new lambda.Function(this, name, {
       runtime: RUNTIME,
-      handler: HANDLER_NAME,
+      handler: handler_name,
       code: lambda.Code.fromAsset(APP_DIR_PATH),
       role: role,
       layers: [myLayer],
@@ -105,9 +127,11 @@ export class SpotifyApi extends Stack {
       process.env.SPOTIFY_CLIENT_SECRET || ""
     );
 
-    fn.addFunctionUrl({
-      authType: lambda.FunctionUrlAuthType.NONE, // 認証なし
-    });
+    if (function_url_enabled) {
+      fn.addFunctionUrl({
+        authType: lambda.FunctionUrlAuthType.NONE, // 認証なし
+      });
+    }
 
     return fn;
   }
