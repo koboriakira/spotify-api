@@ -23,46 +23,46 @@ export class SpotifyApi extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
     super(scope, id, props);
 
-    const role = this.makeRole();
-    const myLayer = this.makeLayer();
-    const fn = this.createLambdaFunction(role, myLayer);
-    this.makeApiGateway(fn);
-
     // S3バケットを作成
     const bucket = new s3.Bucket(this, "SpotifyApiBucket", {
       bucketName: "spotify-api-bucket-koboriakira",
       removalPolicy: RemovalPolicy.DESTROY,
     });
-    // S3バケットへのアクセス権限を持つIAMポリシーをアタッチする
-    const policy = new iam.PolicyStatement({
-      actions: ["s3:*"],
-      resources: [bucket.bucketArn],
-    });
-    fn.addToRolePolicy(policy);
+
+    const role = this.makeRole(bucket.bucketArn);
+    const myLayer = this.makeLayer();
+    const fn = this.createLambdaFunction(role, myLayer);
+    this.makeApiGateway(fn);
   }
 
   /**
    * Create or retrieve an IAM role for the Lambda function.
    * @returns {iam.Role} The created or retrieved IAM role.
    */
-  makeRole() {
-    // Lambdaの実行ロールを取得または新規作成
+  makeRole(bucketArn: string) {
+    // Lambda の実行ロールを作成
     const role = new iam.Role(this, "LambdaRole", {
       assumedBy: new iam.ServicePrincipal("lambda.amazonaws.com"),
     });
 
-    // Lambda の実行ロールに管理ポリシーを追加
+    // 管理ポリシーを追加
     role.addManagedPolicy(
       iam.ManagedPolicy.fromAwsManagedPolicyName(
         "service-role/AWSLambdaBasicExecutionRole"
       )
     );
 
-    // 必要に応じて追加の権限をポリシーとしてロールに付与
+    // ユーザポリシーを追加
     role.addToPrincipalPolicy(
       new iam.PolicyStatement({
         actions: ["lambda:InvokeFunction", "lambda:InvokeAsync"],
         resources: ["*"],
+      })
+    );
+    role.addToPrincipalPolicy(
+      new iam.PolicyStatement({
+        actions: ["s3:*"],
+        resources: [bucketArn + "/*"],
       })
     );
 
