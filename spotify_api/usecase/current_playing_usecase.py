@@ -37,6 +37,8 @@ class CurrentPlayingUsecase:
         import os
         logger.info("post_to_slack")
 
+        artist_name_list = [artist["name"] for artist in track.artists]
+
         # 同じ曲が投稿されているかどうかを調べる
         today, tomorrow = get_current_day_and_tomorrow()
         url = "https://slack.com/api/conversations.history"
@@ -57,13 +59,12 @@ class CurrentPlayingUsecase:
                 if block["type"] == "context":
                     try:
                         context = json.loads(block["elements"][0]["text"])
-                        if context["artist"] == track.artists and context["title"] == track.name:
+                        if context["artist"] == artist_name_list and context["title"] == track.name:
                             return
                     except Exception as e:
                         pass
 
         # Slackに投稿する
-        artist_name_list = [artist["name"] for artist in track.artists]
         section_text = f"<{track.spotify_url}|{track.title_for_slack()}>"
         block_builder = BlockBuilder().add_section(text=section_text)
         block_builder = block_builder.add_button_action(
