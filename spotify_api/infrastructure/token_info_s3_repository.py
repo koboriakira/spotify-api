@@ -1,5 +1,6 @@
 import json
 import boto3
+from typing import Optional
 from botocore.exceptions import NoCredentialsError
 from domain.infrastructure.token_info_repository import TokenInfoRepository
 from custom_logger import get_logger
@@ -24,23 +25,47 @@ class TokenInfoS3Repository(TokenInfoRepository):
         logger.info("is_success: " + str(is_success))
         return is_success
 
+    def load(self) -> Optional[dict]:
+        """
+        トークン情報を取得する
+        """
+        # S3からダウンロード
+        is_success = self.download_from_s3()
+        if not is_success:
+            logger.error("S3からのダウンロードに失敗しました。")
+            return None
+
+        # token_info.jsonを読み込み
+        with open(FILE_PATH, 'r') as f:
+            token_info = json.load(f)
+        return token_info
+
 
     def upload_to_s3(self) -> bool:
-        """
-        ファイルをS3バケットにアップロードする関数
-        :param file_name: アップロードするファイルのパス
-        :param object_name: S3バケット内のファイル名。Noneの場合はfile_nameが使用される
-        :return: ファイルのアップロードが成功した場合はTrueを返し、そうでない場合はFalseを返す
-
-        使用例
-        upload_to_s3('example.txt', 'my-s3-bucket')
-        """
         # S3クライアントを作成
         s3_client = boto3.client('s3')
 
         try:
             # ファイルをアップロード
             s3_client.upload_file(FILE_PATH, BUCKET_NAME, FILE_NAME)
+        except FileNotFoundError:
+            logger.error("ファイルが見つかりませんでした。")
+            return False
+        except NoCredentialsError:
+            logger.error("認証情報が不足しています。")
+            return False
+        except Exception as e:
+            logger.error(e)
+            return False
+        return True
+
+    def download_from_s3(self) -> bool:
+        # S3クライアントを作成
+        s3_client = boto3.client('s3')
+
+        try:
+            # ファイルをダウンロード
+            s3_client.download_file(BUCKET_NAME, FILE_NAME, FILE_PATH)
         except FileNotFoundError:
             logger.error("ファイルが見つかりませんでした。")
             return False
