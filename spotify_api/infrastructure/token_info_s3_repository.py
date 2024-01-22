@@ -12,6 +12,9 @@ FILE_PATH = "/tmp/" + FILE_NAME
 logger = get_logger(__name__)
 
 class TokenInfoS3Repository(TokenInfoRepository):
+    def __init__(self):
+        self.s3_client = boto3.client('s3')
+
     def save(self, token_info: dict) -> bool:
         """
         トークン情報を保存する
@@ -42,12 +45,9 @@ class TokenInfoS3Repository(TokenInfoRepository):
 
 
     def upload_to_s3(self) -> bool:
-        # S3クライアントを作成
-        s3_client = boto3.client('s3')
-
         try:
             # ファイルをアップロード
-            s3_client.upload_file(FILE_PATH, BUCKET_NAME, FILE_NAME)
+            self.s3_client.upload_file(FILE_PATH, BUCKET_NAME, FILE_NAME)
         except FileNotFoundError:
             logger.error("ファイルが見つかりませんでした。")
             return False
@@ -60,12 +60,9 @@ class TokenInfoS3Repository(TokenInfoRepository):
         return True
 
     def download_from_s3(self) -> bool:
-        # S3クライアントを作成
-        s3_client = boto3.client('s3')
-
         try:
             # ファイルをダウンロード
-            s3_client.download_file(BUCKET_NAME, FILE_NAME, FILE_PATH)
+            self.s3_client.download_file(BUCKET_NAME, FILE_NAME, FILE_PATH)
         except FileNotFoundError:
             logger.error("ファイルが見つかりませんでした。")
             return False
