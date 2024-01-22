@@ -10,6 +10,7 @@ mangum = "==0.17.0"
 requests = "==2.31.0"
 pyyaml = "==6.0"
 spotipy = "*"
+boto3 = "*"
 
 [dev-packages]
 uvicorn = "*"
