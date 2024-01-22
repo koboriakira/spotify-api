@@ -33,6 +33,12 @@ export class SpotifyApi extends Stack {
       bucketName: "spotify-api-bucket-koboriakira",
       removalPolicy: RemovalPolicy.DESTROY,
     });
+    // S3バケットへのアクセス権限を持つIAMポリシーをアタッチする
+    const policy = new iam.PolicyStatement({
+      actions: ["s3:*"],
+      resources: [bucket.bucketArn],
+    });
+    fn.addToRolePolicy(policy);
   }
 
   /**
