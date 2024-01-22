@@ -126,6 +126,7 @@ export class SpotifyApi extends Stack {
       "SPOTIFY_CLIENT_SECRET",
       process.env.SPOTIFY_CLIENT_SECRET || ""
     );
+    fn.addEnvironment("SLACK_BOT_TOKEN", process.env.SLACK_BOT_TOKEN || "");
 
     if (function_url_enabled) {
       fn.addFunctionUrl({
