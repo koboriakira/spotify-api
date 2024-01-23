@@ -11,8 +11,6 @@ FILE_PATH = "/tmp/" + FILE_NAME
 
 logger = get_logger(__name__)
 
-# TODO: ローカル環境に対応させる
-
 class TokenInfoS3Repository(TokenInfoRepository):
     def __init__(self):
         self.s3_client = boto3.client('s3')
