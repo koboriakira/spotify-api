@@ -14,7 +14,7 @@ def get_callback_url() -> str:
     """ 認証のコールバック用URLを取得 """
     # NOTE: 返却値が変わる場合は、Spotifyのアプリ設定画面のRedirect URIsも変更する必要がある
     path = "authorize_callback"
-    if os.getenv('ENVIRONMENT') == "dev":
+    if os.getenv('ENVIRONMENT') in ["dev", "local"]:
         return f"http://localhost:10120/{path}"
     else:
         return f"https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/{path}"

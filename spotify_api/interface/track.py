@@ -9,7 +9,10 @@ from service.authorization_service import AuthorizationService
 from util.environment import Environment
 from domain.model.track import Track
 
-repository = TokenInfoS3Repository() if not Environment.is_dev() else TokenInfoLocalRepository()
+if Environment.is_dev() or Environment.is_local():
+    repository = TokenInfoLocalRepository()
+else:
+    repository = TokenInfoS3Repository()
 authorization_service = AuthorizationService(token_repository=repository)
 
 def get_track(track_id: str) -> Optional[Track]:

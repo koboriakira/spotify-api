@@ -4,7 +4,10 @@ from infrastructure.token_info_s3_repository import TokenInfoS3Repository
 from infrastructure.token_info_local_repository import TokenInfoLocalRepository
 from util.environment import Environment
 
-repository = TokenInfoS3Repository() if not Environment.is_dev() else TokenInfoLocalRepository()
+if Environment.is_dev() or Environment.is_local():
+    repository = TokenInfoLocalRepository()
+else:
+    repository = TokenInfoS3Repository()
 authorizeUsecase = AuthorizeUsecase(repository=repository)
 
 def get_authorize_url() -> str:

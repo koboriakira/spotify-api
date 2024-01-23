@@ -6,6 +6,10 @@ class Environment:
         return os.getenv("ENVIRONMENT") == "dev"
 
     @staticmethod
+    def is_local():
+        return os.getenv("ENVIRONMENT") == "local"
+
+    @staticmethod
     def valid_access_token(secret: str) -> None:
         if Environment.is_dev():
             return
