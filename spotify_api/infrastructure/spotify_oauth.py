@@ -3,7 +3,12 @@ from spotipy.oauth2 import SpotifyOAuth
 
 CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
-SCOPE = 'user-library-read,user-top-read,user-read-currently-playing'
+SCOPE = ",".join([
+    "user-library-read",  # ライブラリの曲を取得するために必要
+    "user-library-modify", # ライブラリに曲を追加するために必要
+    "user-top-read", # トップトラックを取得するために必要
+    "user-read-currently-playing", # 現在流れている曲を取得するために必要
+])
 
 def get_callback_url() -> str:
     """ 認証のコールバック用URLを取得 """

@@ -71,6 +71,16 @@ async def post_current_playing():
         logger.error(e)
         return False
 
+@app.post("/love/{track_id}", response_model=dict)
+async def love_track(track_id: str):
+    """
+    指定した曲を「いいね」する
+    """
+    track.love_track(track_id=track_id)
+    return {
+        "is_success": True,
+    }
+
 
 @app.get("/healthcheck")
 def hello():

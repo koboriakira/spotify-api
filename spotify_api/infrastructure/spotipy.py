@@ -31,5 +31,10 @@ class Spotipy:
         logger.debug(playing_track)
         return TrackTranslator.from_entity(playing_track["item"])
 
+    def love_track(self, track_id: str) -> None:
+        logger.debug(track_id)
+        response = self.sp.current_user_saved_tracks_add(tracks=[track_id])
+        logger.debug(response)
+
     def get_album(self, album_id: str):
         raise NotImplementedError()

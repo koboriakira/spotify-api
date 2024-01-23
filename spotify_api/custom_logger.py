@@ -2,13 +2,14 @@ import logging
 from logging import Logger
 from typing import Optional
 import os
+from util.environment import Environment
 
 LOG_FILE_NAME = "app.log"
 
 def get_logger(name: Optional[str] = None) -> Logger:
     logger = logging.getLogger(name)
 
-    if os.getenv("ENVIRONMENT") == "dev":
+    if Environment.is_dev():
         logger.setLevel(logging.DEBUG)
     else:
         logger.setLevel(logging.INFO)
