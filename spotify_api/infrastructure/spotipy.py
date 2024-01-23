@@ -12,6 +12,7 @@ class Spotipy:
 
     @classmethod
     def get_instance(cls, access_token: str) -> 'Spotipy':
+        logger.debug("access_token: {}".format(access_token))
         return cls(spotipy.Spotify(auth=access_token))
 
     def current_user_recently_played(self) -> list:

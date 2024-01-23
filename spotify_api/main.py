@@ -5,6 +5,8 @@ from fastapi import FastAPI, Header, Response, Request, HTTPException
 from custom_logger import get_logger
 from interface.track_response import TrackResponse
 from interface import track, authorize
+from router import track as track_router
+from router import current as current_router
 
 logger = get_logger(__name__)
 logger.info("start")
@@ -25,6 +27,8 @@ app = FastAPI(
     title="My Spotify API",
     version="0.0.1",
 )
+app.include_router(track_router.router, prefix="/track", tags=["track"])
+app.include_router(current_router.router, prefix="/current", tags=["current"])
 
 @app.get("/authorize", status_code=303)
 def get_authorize():
@@ -42,44 +46,6 @@ async def authorize_callback(request: Request):
     if code is None:
         raise HTTPException(status_code=400, detail="code is not found.")
     return authorize.authorize_callback(code=code)
-
-@app.get("/track/{track_id}", response_model=Optional[TrackResponse],)
-def get_track(track_id: str,
-              accsses_token: str = Header(None)):
-    # valid_saccess_token(accsses_token)
-    return track.get_track(track_id=track_id)
-
-
-
-@app.get("/current/playing", response_model=Optional[TrackResponse])
-async def get_current_playing():
-    """
-    現在流れている曲を取得する
-    """
-    return track.get_current_playing()
-
-
-@app.post("/current/playing", response_model=bool)
-async def post_current_playing():
-    """
-    現在流れている曲を取得して、Slackに通知する
-    """
-    try:
-        track.post_current_playing()
-        return True
-    except Exception as e:
-        logger.error(e)
-        return False
-
-@app.post("/love/{track_id}", response_model=dict)
-async def love_track(track_id: str):
-    """
-    指定した曲を「いいね」する
-    """
-    track.love_track(track_id=track_id)
-    return {
-        "is_success": True,
-    }
 
 
 @app.get("/healthcheck")
