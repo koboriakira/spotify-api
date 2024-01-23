@@ -17,18 +17,13 @@ class CurrentPlayingUsecase:
     def get_current_playing(self) -> Optional[Track]:
         return self.spotipy.get_current_playing()
 
-    def notificate_current_playing(self) -> dict:
+    def notificate_current_playing(self) -> bool:
         track = self.get_current_playing()
         if track is None:
-            return {
-                "status": "info",
-                "message": "no track is playing now."
-            }
+            logger.debug("no track is playing now.")
+            return True
         self._post_to_slack(track=track)
-        return {
-            "status": "success",
-            "message": track.title_for_slack()
-        }
+        return True
 
     def _post_to_slack(self, track: Track) -> None:
         # 面倒だし使い回さないので、このファイルに実装する

@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field
+from router.response.base_response import BaseResponse
 from typing import Optional
 
-class TrackResponse(BaseModel):
+class Track(BaseModel):
     id: str = Field(description="Spotify ID of the track")
     name: str = Field(description="Name of the track")
     artists: list[str] = Field(description="Name of the artist")
@@ -12,5 +13,9 @@ class TrackResponse(BaseModel):
     def __hash__(self):
         return hash(self.id)
 
-    def __eq__(self, __value: 'TrackResponse') -> bool:
+    def __eq__(self, __value: 'Track') -> bool:
         return self.id == __value.id
+
+
+class TrackResponse(BaseResponse):
+    data: Track = Field(description="Track data")
