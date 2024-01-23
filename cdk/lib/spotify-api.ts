@@ -163,7 +163,7 @@ export class SpotifyApi extends Stack {
     restapi.root.addMethod("ANY", new apigateway.LambdaIntegration(fn));
     restapi.root
       .addResource("{proxy+}")
-      .addMethod("GET", new apigateway.LambdaIntegration(fn));
+      .addMethod("ANY", new apigateway.LambdaIntegration(fn));
     return restapi;
   }
 }
