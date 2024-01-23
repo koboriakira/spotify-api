@@ -19,3 +19,12 @@ async def get_current_playing(access_token: Optional[str] = Header(None)):
         return BaseResponse(message="no track is playing now.")
     data = TrackResponseTranslator.to_entity(track_model)
     return TrackResponse(data=data)
+
+@router.post("/playing", response_model=BaseResponse)
+async def get_current_playing(access_token: Optional[str] = Header(None)):
+    """
+    現在流れている曲を取得して、Slackに通知する
+    """
+    Environment.valid_access_token(access_token)
+    track.post_current_playing()
+    return BaseResponse()
