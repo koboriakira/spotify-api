@@ -58,7 +58,7 @@ export class SpotifyApi extends Stack {
       schedule: events.Schedule.cron({ minute: "0/1" }), // 毎分実行
       targets: [
         new targets.LambdaFunction(notificate_current_playing, {
-          retryAttempts: 1,
+          retryAttempts: 0,
         }),
       ],
     });
