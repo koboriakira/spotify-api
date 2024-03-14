@@ -8,7 +8,7 @@ from router.response.track_response_translator import TrackResponseTranslator
 router = APIRouter()
 
 
-@router.get("/playing", response_model=TrackResponse|BaseResponse)
+@router.get("/playing", response_model=TrackResponse | BaseResponse)
 async def get_current_playing(access_token: Optional[str] = Header(None)):
     """
     現在流れている曲を取得する
@@ -20,8 +20,9 @@ async def get_current_playing(access_token: Optional[str] = Header(None)):
     data = TrackResponseTranslator.to_entity(track_model)
     return TrackResponse(data=data)
 
+
 @router.post("/playing", response_model=BaseResponse)
-async def get_current_playing(access_token: Optional[str] = Header(None)):
+async def post_current_playing(access_token: Optional[str] = Header(None)):
     """
     現在流れている曲を取得して、Slackに通知する
     """
