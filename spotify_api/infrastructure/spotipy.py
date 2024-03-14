@@ -6,12 +6,13 @@ from custom_logger import get_logger
 
 logger = get_logger(__name__)
 
+
 class Spotipy:
     def __init__(self, sp: spotipy.Spotify):
         self.sp = sp
 
     @classmethod
-    def get_instance(cls, access_token: str) -> 'Spotipy':
+    def get_instance(cls, access_token: str) -> "Spotipy":
         logger.debug("access_token: {}".format(access_token))
         return cls(spotipy.Spotify(auth=access_token))
 
@@ -36,6 +37,12 @@ class Spotipy:
         logger.debug(track_id)
         response = self.sp.current_user_saved_tracks_add(tracks=[track_id])
         logger.debug(response)
+
+    def is_track_saved(self, track_id: str) -> bool:
+        """指定されたトラックがすでにSaveされているかを判定する"""
+        response = self.sp.current_user_saved_tracks_contains(tracks=[track_id])
+        logger.debug(response)
+        return response[0]
 
     def get_album(self, album_id: str):
         raise NotImplementedError()
