@@ -9,7 +9,8 @@ from service.authorization_service import AuthorizationService
 
 logger = get_logger(__name__)
 
-CHANNEL_ID = "C05HGA2TK26" # musicチャンネル
+CHANNEL_ID = "C05HGA2TK26"  # musicチャンネル
+
 
 class CurrentPlayingUsecase:
     def __init__(self, authorization_service: AuthorizationService):
@@ -32,6 +33,7 @@ class CurrentPlayingUsecase:
         import requests
         import json
         import os
+
         logger.info("post_to_slack")
 
         artist_name_list = [artist["name"] for artist in track.artists]
@@ -40,12 +42,12 @@ class CurrentPlayingUsecase:
         today, tomorrow = get_current_day_and_tomorrow()
         url = "https://slack.com/api/conversations.history"
         params = {
-            "channel": CHANNEL_ID, # musicチャンネル
+            "channel": CHANNEL_ID,  # musicチャンネル
             "oldest": str(today),
             "latest": str(tomorrow),
         }
         headers = {
-            'Authorization': 'Bearer ' + os.environ["SLACK_BOT_TOKEN"],
+            "Authorization": "Bearer " + os.environ["SLACK_BOT_TOKEN"],
         }
         logger.info("conversations.history")
         response = requests.request("GET", url, headers=headers, params=params)
@@ -66,22 +68,22 @@ class CurrentPlayingUsecase:
         # Slackに投稿する
         block_builder = BlockBuilder().add_section(text=track.title_for_slack())
         block_builder = block_builder.add_button_action(
-            action_id="LOVE_SPOTIFY_TRACK",
-            text="Love",
-            value=track.id,
-            style="primary")
+            action_id="LOVE_SPOTIFY_TRACK", text="Love", value=track.id, style="primary"
+        )
         # block_builder = block_builder.add_context(text=track.id)
         blocks = block_builder.build()
         logger.info("chat.postMessage")
         url = "https://slack.com/api/chat.postMessage"
-        payload = json.dumps({
-            "channel": CHANNEL_ID, # musicチャンネル
-            "text": track.title_for_slack(),
-            "blocks": blocks,
-        })
+        payload = json.dumps(
+            {
+                "channel": CHANNEL_ID,  # musicチャンネル
+                "text": track.title_for_slack(),
+                "blocks": blocks,
+            }
+        )
         headers = {
-            'Authorization': 'Bearer ' + os.environ["SLACK_BOT_TOKEN"],
-            'Content-Type': 'application/json',
+            "Authorization": "Bearer " + os.environ["SLACK_BOT_TOKEN"],
+            "Content-Type": "application/json",
         }
         response = requests.request("POST", url, headers=headers, data=payload)
         response_json = response.json()
@@ -89,11 +91,13 @@ class CurrentPlayingUsecase:
 
         thread_ts = response_json["ts"]
         channel_id = response_json["channel"]
-        payload = json.dumps({
-            "channel": channel_id,
-            "text": track.spotify_url,
-            "thread_ts": thread_ts,
-        })
+        payload = json.dumps(
+            {
+                "channel": channel_id,
+                "text": track.spotify_url,
+                "thread_ts": thread_ts,
+            }
+        )
         response = requests.request("POST", url, headers=headers, data=payload)
         response_json = response.json()
         print(json.dumps(response_json))
