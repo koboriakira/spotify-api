@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find:*)",
+      "WebFetch(domain:github.com)",
+      "Bash(python -m pytest test_spotify_monitor.py -v)",
+      "Bash(pipenv run python -m pytest:*)",
+      "Bash(pipenv install:*)",
+      "Bash(git checkout:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}
