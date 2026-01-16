@@ -10,6 +10,8 @@ def sample_track_data() -> dict:
         "album": {
             "name": "Test Album",
             "id": "album123",
+            "release_date": "2024-01-15",
+            "images": [{"url": "https://example.com/cover.jpg"}],
         },
         "artists": [
             {"name": "Test Artist", "id": "artist123"},
