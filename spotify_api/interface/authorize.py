@@ -1,3 +1,5 @@
+from typing import Any
+
 from infrastructure.token_info_local_repository import TokenInfoLocalRepository
 from infrastructure.token_info_s3_repository import TokenInfoS3Repository
 from usecase.authorize_usecase import AuthorizeUsecase
@@ -14,5 +16,5 @@ def get_authorize_url() -> str:
     return authorizeUsecase.get_authorize_url()
 
 
-def authorize_callback(code: str) -> dict:
+def authorize_callback(code: str) -> dict[str, Any]:
     return authorizeUsecase.authorize_callback(code=code)

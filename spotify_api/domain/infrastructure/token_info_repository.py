@@ -1,4 +1,5 @@
 from abc import ABCMeta, abstractmethod
+from typing import Any
 
 
 class TokenInfoRepository(metaclass=ABCMeta):
@@ -7,14 +8,14 @@ class TokenInfoRepository(metaclass=ABCMeta):
     """
 
     @abstractmethod
-    def save(self, token_info: dict) -> bool:
+    def save(self, token_info: dict[str, Any]) -> bool:
         """
         トークン情報を保存する
         """
         pass
 
     @abstractmethod
-    def load(self) -> dict | None:
+    def load(self) -> dict[str, Any] | None:
         """
         トークン情報を取得する
         """

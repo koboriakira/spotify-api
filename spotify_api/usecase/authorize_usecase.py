@@ -1,3 +1,5 @@
+from typing import Any
+
 from custom_logger import get_logger
 from domain.infrastructure.token_info_repository import TokenInfoRepository
 from infrastructure.spotify_oauth import SpotifyOauth
@@ -15,7 +17,7 @@ class AuthorizeUsecase:
         logger.info("authorize_url: " + authorize_url)
         return authorize_url
 
-    def authorize_callback(self, code: str) -> dict:
+    def authorize_callback(self, code: str) -> dict[str, Any]:
         token_info = self.spotify_oauth.authorize_callback(code=code)
         self.repository.save(token_info=token_info)
         return token_info

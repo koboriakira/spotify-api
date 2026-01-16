@@ -1,4 +1,5 @@
 import json
+from typing import Any, cast
 
 import boto3
 from botocore.exceptions import NoCredentialsError
@@ -16,7 +17,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
     def __init__(self):
         self.s3_client = boto3.client("s3")
 
-    def save(self, token_info: dict) -> bool:
+    def save(self, token_info: dict[str, Any]) -> bool:
         """
         トークン情報を保存する
         """
@@ -29,7 +30,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
         logger.info("is_success: " + str(is_success))
         return is_success
 
-    def load(self) -> dict | None:
+    def load(self) -> dict[str, Any] | None:
         """
         トークン情報を取得する
         """
@@ -42,7 +43,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
         # token_info.jsonを読み込み
         with open(FILE_PATH) as f:
             token_info = json.load(f)
-        return token_info
+        return cast(dict[str, Any], token_info)
 
     def upload_to_s3(self) -> bool:
         try:

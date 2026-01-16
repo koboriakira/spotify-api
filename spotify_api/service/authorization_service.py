@@ -1,4 +1,5 @@
 from datetime import datetime as DateTime
+from typing import cast
 
 from custom_logger import get_logger
 from domain.infrastructure.token_info_repository import TokenInfoRepository
@@ -22,4 +23,4 @@ class AuthorizationService:
             # 期限切れの場合はリフレッシュトークンを使ってアクセストークンを更新する
             token_info = self.spotify_oauth.refresh_access_token(token_info["refresh_token"])
             self.token_repository.save(token_info=token_info)
-        return token_info["access_token"]
+        return cast(str, token_info["access_token"])
