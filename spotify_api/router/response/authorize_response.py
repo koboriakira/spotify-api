@@ -1,5 +1,4 @@
 from pydantic import Field
-
 from router.response.base_response import BaseResponse
 
 

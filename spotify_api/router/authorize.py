@@ -1,7 +1,6 @@
 from custom_logger import get_logger
 from fastapi import APIRouter, HTTPException, Request, Response
 from interface import authorize
-
 from router.response import BaseResponse
 
 logger = get_logger(__name__)

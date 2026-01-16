@@ -1,7 +1,6 @@
 from datetime import date as DateObject
 
 from domain.model.track import Track as TrackEntity
-
 from router.response.track_response import Track
 
 
