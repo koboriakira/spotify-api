@@ -1,6 +1,14 @@
 """Pytest configuration and fixtures."""
 
+import os
+
 import pytest
+
+# Set environment variables at module load time (before test collection)
+os.environ.setdefault("SPOTIPY_CLIENT_ID", "test_client_id")
+os.environ.setdefault("SPOTIPY_CLIENT_SECRET", "test_client_secret")
+os.environ.setdefault("SPOTIPY_REDIRECT_URI", "http://localhost:8000/callback")
+os.environ.setdefault("ENVIRONMENT", "dev")
 
 
 @pytest.fixture
