@@ -1,9 +1,8 @@
 from fastapi import APIRouter, Header
 from interface import track
-from util.environment import Environment
-
 from router.response import BaseResponse, TrackResponse
 from router.response.track_response_translator import TrackResponseTranslator
+from util.environment import Environment
 
 router = APIRouter()
 
