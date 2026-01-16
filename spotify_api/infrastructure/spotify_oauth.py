@@ -1,4 +1,5 @@
 import os
+from typing import Any, cast
 
 from spotipy.oauth2 import SpotifyOAuth
 
@@ -34,18 +35,18 @@ class SpotifyOauth:
         """
         認証用のURLを取得
         """
-        return self.sp_oauth.get_authorize_url()
+        return cast(str, self.sp_oauth.get_authorize_url())
 
-    def authorize_callback(self, code: str) -> dict:
+    def authorize_callback(self, code: str) -> dict[str, Any]:
         """
         認証コールバック
         token_infoを返す
         """
-        return self.sp_oauth.get_access_token(code)
+        return cast(dict[str, Any], self.sp_oauth.get_access_token(code))
 
-    def refresh_access_token(self, refresh_token: str) -> dict:
+    def refresh_access_token(self, refresh_token: str) -> dict[str, Any]:
         """
         アクセストークンをリフレッシュ
         token_infoを返す
         """
-        return self.sp_oauth.refresh_access_token(refresh_token)
+        return cast(dict[str, Any], self.sp_oauth.refresh_access_token(refresh_token))

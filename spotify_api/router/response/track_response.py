@@ -14,8 +14,10 @@ class Track(BaseModel):
     def __hash__(self):
         return hash(self.id)
 
-    def __eq__(self, __value: "Track") -> bool:
-        return self.id == __value.id
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Track):
+            return NotImplemented
+        return self.id == other.id
 
 
 class TrackResponse(BaseResponse):

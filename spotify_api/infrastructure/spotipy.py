@@ -41,7 +41,7 @@ class Spotipy:
         """指定されたトラックがすでにSaveされているかを判定する"""
         response = self.sp.current_user_saved_tracks_contains(tracks=[track_id])
         logger.debug(response)
-        return response[0]
+        return bool(response[0])
 
     def get_album(self, album_id: str):
         raise NotImplementedError()

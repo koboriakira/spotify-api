@@ -1,4 +1,5 @@
 import json
+from typing import Any, cast
 
 from custom_logger import get_logger
 from domain.infrastructure.token_info_repository import TokenInfoRepository
@@ -10,7 +11,7 @@ logger = get_logger(__name__)
 
 
 class TokenInfoLocalRepository(TokenInfoRepository):
-    def save(self, token_info: dict) -> bool:
+    def save(self, token_info: dict[str, Any]) -> bool:
         """
         トークン情報を保存する
         """
@@ -19,14 +20,14 @@ class TokenInfoLocalRepository(TokenInfoRepository):
             json.dump(token_info, f, indent=4)
         return True
 
-    def load(self) -> dict | None:
+    def load(self) -> dict[str, Any] | None:
         """
         トークン情報を取得する
         """
         # token_info.jsonを読み込み
         with open(FILE_PATH) as f:
             token_info = json.load(f)
-        return token_info
+        return cast(dict[str, Any], token_info)
 
 
 if __name__ == "__main__":

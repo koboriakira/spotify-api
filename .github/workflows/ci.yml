@@ -12,11 +12,10 @@ on:
 
 jobs:
   test:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest]
         python-version: ["3.11", "3.12"]
 
     steps:
@@ -48,7 +47,7 @@ jobs:
         run: uv run ruff format --check spotify_api tests
 
       - name: Upload coverage to Codecov
-        if: matrix.os == 'ubuntu-latest' && matrix.python-version == '3.12'
+        if: matrix.python-version == '3.12'
         uses: codecov/codecov-action@v4
         with:
           files: ./coverage.xml

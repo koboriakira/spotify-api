@@ -1,16 +1,17 @@
 from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass(frozen=True)
 class Track:
-    album: dict
-    artists: list
-    available_markets: list
+    album: dict[str, Any]
+    artists: list[dict[str, Any]]
+    available_markets: list[str]
     disc_number: int
     duration_ms: int
     explicit: bool
-    external_ids: dict
-    external_urls: dict
+    external_ids: dict[str, Any]
+    external_urls: dict[str, str]
     href: str
     id: str
     is_local: bool
@@ -67,4 +68,4 @@ class Track:
 
     @property
     def spotify_url(self) -> str | None:
-        return self.external_urls["spotify"]
+        return self.external_urls.get("spotify")
