@@ -1,16 +1,16 @@
 from datetime import datetime as DateTime
-from infrastructure.spotify_oauth import SpotifyOauth
+
 from custom_logger import get_logger
 from domain.infrastructure.token_info_repository import TokenInfoRepository
-
+from infrastructure.spotify_oauth import SpotifyOauth
 
 logger = get_logger(__name__)
+
 
 class AuthorizationService:
     def __init__(self, token_repository: TokenInfoRepository):
         self.token_repository = token_repository
         self.spotify_oauth = SpotifyOauth()
-
 
     def get_access_token(self) -> str:
         token_info = self.token_repository.load()

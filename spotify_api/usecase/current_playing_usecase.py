@@ -1,11 +1,9 @@
-from typing import Optional
-from infrastructure.spotipy import Spotipy
-from domain.model.track import Track
 from custom_logger import get_logger
-from util.datetime import get_current_day_and_tomorrow
+from domain.model.track import Track
 from domain.slack.block_builder import BlockBuilder
+from infrastructure.spotipy import Spotipy
 from service.authorization_service import AuthorizationService
-
+from util.datetime import get_current_day_and_tomorrow
 
 logger = get_logger(__name__)
 
@@ -17,7 +15,7 @@ class CurrentPlayingUsecase:
         access_token = authorization_service.get_access_token()
         self.spotipy = Spotipy.get_instance(access_token=access_token)
 
-    def get_current_playing(self) -> Optional[Track]:
+    def get_current_playing(self) -> Track | None:
         return self.spotipy.get_current_playing()
 
     def notificate_current_playing(self) -> bool:
@@ -30,13 +28,12 @@ class CurrentPlayingUsecase:
 
     def _post_to_slack(self, track: Track) -> None:
         # 面倒だし使い回さないので、このファイルに実装する
-        import requests
         import json
         import os
 
-        logger.info("post_to_slack")
+        import requests
 
-        artist_name_list = [artist["name"] for artist in track.artists]
+        logger.info("post_to_slack")
 
         # 同じ曲が投稿されているかどうかを調べる
         today, tomorrow = get_current_day_and_tomorrow()
@@ -62,7 +59,7 @@ class CurrentPlayingUsecase:
                         spotify_id = element["value"]
                         if spotify_id == track.id:
                             return
-                    except Exception as e:
+                    except Exception:
                         pass
 
         # Slackに投稿する

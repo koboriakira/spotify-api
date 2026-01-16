@@ -1,15 +1,15 @@
-from typing import Optional
 from fastapi import APIRouter, Header
 from interface import track
 from util.environment import Environment
-from router.response import TrackResponse, BaseResponse
+
+from router.response import BaseResponse, TrackResponse
 from router.response.track_response_translator import TrackResponseTranslator
 
 router = APIRouter()
 
 
 @router.get("/playing", response_model=TrackResponse | BaseResponse)
-async def get_current_playing(access_token: Optional[str] = Header(None)):
+async def get_current_playing(access_token: str | None = Header(None)):
     """
     現在流れている曲を取得する
     """
@@ -22,7 +22,7 @@ async def get_current_playing(access_token: Optional[str] = Header(None)):
 
 
 @router.post("/playing", response_model=BaseResponse)
-async def post_current_playing(access_token: Optional[str] = Header(None)):
+async def post_current_playing(access_token: str | None = Header(None)):
     """
     現在流れている曲を取得して、Slackに通知する
     """

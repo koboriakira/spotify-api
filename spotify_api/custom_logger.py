@@ -1,12 +1,12 @@
 import logging
 from logging import Logger
-from typing import Optional
-import os
+
 from util.environment import Environment
 
 LOG_FILE_NAME = "app.log"
 
-def get_logger(name: Optional[str] = None) -> Logger:
+
+def get_logger(name: str | None = None) -> Logger:
     logger = logging.getLogger(name)
 
     if Environment.is_dev():
@@ -16,8 +16,7 @@ def get_logger(name: Optional[str] = None) -> Logger:
 
     # handler1: 標準出力
     handler1 = logging.StreamHandler()
-    handler1.setFormatter(logging.Formatter(
-        "%(asctime)s %(levelname)8s %(message)s"))
+    handler1.setFormatter(logging.Formatter("%(asctime)s %(levelname)8s %(message)s"))
     logger.addHandler(handler1)
 
     # if os.getenv("ENVIRONMENT") == "dev":

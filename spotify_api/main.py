@@ -1,9 +1,9 @@
-from mangum import Mangum
-from fastapi import FastAPI
 from custom_logger import get_logger
-from router import track as track_router
-from router import current as current_router
+from fastapi import FastAPI
+from mangum import Mangum
 from router import authorize as authorize_router
+from router import current as current_router
+from router import track as track_router
 
 logger = get_logger(__name__)
 logger.info("start")
@@ -17,6 +17,7 @@ app.include_router(track_router.router, prefix="/track", tags=["track"])
 app.include_router(current_router.router, prefix="/current", tags=["current"])
 app.include_router(authorize_router.router, tags=["authorize"])
 
+
 @app.get("/healthcheck")
 def hello():
     """
@@ -25,7 +26,8 @@ def hello():
     logger.debug("healthcheck")
     logger.info("healthcheck")
     return {
-        'status': 'ok',
+        "status": "ok",
     }
+
 
 handler = Mangum(app, lifespan="off")

@@ -1,13 +1,11 @@
-from typing import Optional
-from custom_logger import get_logger
-from usecase.get_track_usecase import GetTrackUsecase
-from usecase.current_playing_usecase import CurrentPlayingUsecase
-from usecase.love_track_usecase import LoveTrackUsecase, LoveTrackResponse
-from infrastructure.token_info_s3_repository import TokenInfoS3Repository
-from infrastructure.token_info_local_repository import TokenInfoLocalRepository
-from service.authorization_service import AuthorizationService
-from util.environment import Environment
 from domain.model.track import Track
+from infrastructure.token_info_local_repository import TokenInfoLocalRepository
+from infrastructure.token_info_s3_repository import TokenInfoS3Repository
+from service.authorization_service import AuthorizationService
+from usecase.current_playing_usecase import CurrentPlayingUsecase
+from usecase.get_track_usecase import GetTrackUsecase
+from usecase.love_track_usecase import LoveTrackResponse, LoveTrackUsecase
+from util.environment import Environment
 
 if Environment.is_dev() or Environment.is_local():
     repository = TokenInfoLocalRepository()
@@ -16,22 +14,18 @@ else:
 authorization_service = AuthorizationService(token_repository=repository)
 
 
-def get_track(track_id: str) -> Optional[Track]:
+def get_track(track_id: str) -> Track | None:
     get_track_usecase = GetTrackUsecase(authorization_service=authorization_service)
     return get_track_usecase.execute(track_id=track_id)
 
 
-def get_current_playing() -> Optional[Track]:
-    current_playing_usecase = CurrentPlayingUsecase(
-        authorization_service=authorization_service
-    )
+def get_current_playing() -> Track | None:
+    current_playing_usecase = CurrentPlayingUsecase(authorization_service=authorization_service)
     return current_playing_usecase.get_current_playing()
 
 
 def post_current_playing() -> bool:
-    current_playing_usecase = CurrentPlayingUsecase(
-        authorization_service=authorization_service
-    )
+    current_playing_usecase = CurrentPlayingUsecase(authorization_service=authorization_service)
     return current_playing_usecase.notificate_current_playing()
 
 

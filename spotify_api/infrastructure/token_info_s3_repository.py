@@ -1,9 +1,9 @@
 import json
+
 import boto3
-from typing import Optional
 from botocore.exceptions import NoCredentialsError
-from domain.infrastructure.token_info_repository import TokenInfoRepository
 from custom_logger import get_logger
+from domain.infrastructure.token_info_repository import TokenInfoRepository
 
 BUCKET_NAME = "spotify-api-bucket-koboriakira"
 FILE_NAME = "token_info.json"
@@ -11,16 +11,17 @@ FILE_PATH = "/tmp/" + FILE_NAME
 
 logger = get_logger(__name__)
 
+
 class TokenInfoS3Repository(TokenInfoRepository):
     def __init__(self):
-        self.s3_client = boto3.client('s3')
+        self.s3_client = boto3.client("s3")
 
     def save(self, token_info: dict) -> bool:
         """
         トークン情報を保存する
         """
         # token_info.jsonを出力
-        with open(FILE_PATH, 'w') as f:
+        with open(FILE_PATH, "w") as f:
             json.dump(token_info, f, indent=4)
 
         # S3にアップロード
@@ -28,7 +29,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
         logger.info("is_success: " + str(is_success))
         return is_success
 
-    def load(self) -> Optional[dict]:
+    def load(self) -> dict | None:
         """
         トークン情報を取得する
         """
@@ -39,10 +40,9 @@ class TokenInfoS3Repository(TokenInfoRepository):
             return None
 
         # token_info.jsonを読み込み
-        with open(FILE_PATH, 'r') as f:
+        with open(FILE_PATH) as f:
             token_info = json.load(f)
         return token_info
-
 
     def upload_to_s3(self) -> bool:
         try:
@@ -74,6 +74,7 @@ class TokenInfoS3Repository(TokenInfoRepository):
             return False
         return True
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # python -m infrastructure.token_info_s3_repository
     print(TokenInfoS3Repository().save({"access_token": "test", "refresh_token": "test"}))

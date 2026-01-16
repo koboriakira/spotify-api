@@ -1,9 +1,8 @@
-from typing import Optional
-from infrastructure.spotipy import Spotipy
-from domain.model.track import Track
-from service.authorization_service import AuthorizationService
-from enum import Enum
 from dataclasses import dataclass
+from enum import Enum
+
+from infrastructure.spotipy import Spotipy
+from service.authorization_service import AuthorizationService
 
 
 class LoveTrackResult(Enum):
