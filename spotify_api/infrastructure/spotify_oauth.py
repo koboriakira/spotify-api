@@ -1,20 +1,24 @@
 import os
+
 from spotipy.oauth2 import SpotifyOAuth
 
-CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
-CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
-SCOPE = ",".join([
-    "user-library-read",  # ライブラリの曲を取得するために必要
-    "user-library-modify", # ライブラリに曲を追加するために必要
-    "user-top-read", # トップトラックを取得するために必要
-    "user-read-currently-playing", # 現在流れている曲を取得するために必要
-])
+CLIENT_ID = os.getenv("SPOTIFY_CLIENT_ID")
+CLIENT_SECRET = os.getenv("SPOTIFY_CLIENT_SECRET")
+SCOPE = ",".join(
+    [
+        "user-library-read",  # ライブラリの曲を取得するために必要
+        "user-library-modify",  # ライブラリに曲を追加するために必要
+        "user-top-read",  # トップトラックを取得するために必要
+        "user-read-currently-playing",  # 現在流れている曲を取得するために必要
+    ]
+)
+
 
 def get_callback_url() -> str:
-    """ 認証のコールバック用URLを取得 """
+    """認証のコールバック用URLを取得"""
     # NOTE: 返却値が変わる場合は、Spotifyのアプリ設定画面のRedirect URIsも変更する必要がある
     path = "authorize_callback"
-    if os.getenv('ENVIRONMENT') in ["dev", "local"]:
+    if os.getenv("ENVIRONMENT") in ["dev", "local"]:
         return f"http://localhost:10120/{path}"
     else:
         return f"https://5e2lmuxy04.execute-api.ap-northeast-1.amazonaws.com/v1/{path}"
@@ -22,10 +26,9 @@ def get_callback_url() -> str:
 
 class SpotifyOauth:
     def __init__(self):
-        self.sp_oauth = SpotifyOAuth(client_id=CLIENT_ID,
-                                     client_secret=CLIENT_SECRET,
-                                     redirect_uri=get_callback_url(),
-                                     scope=SCOPE)
+        self.sp_oauth = SpotifyOAuth(
+            client_id=CLIENT_ID, client_secret=CLIENT_SECRET, redirect_uri=get_callback_url(), scope=SCOPE
+        )
 
     def get_authorize_url(self) -> str:
         """

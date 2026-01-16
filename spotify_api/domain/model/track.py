@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Optional, Any
 
 
 @dataclass(frozen=True)
@@ -17,13 +16,13 @@ class Track:
     is_local: bool
     name: str
     popularity: int
-    preview_url: Optional[str]
+    preview_url: str | None
     track_number: int
     type: str
     uri: str
 
     @staticmethod
-    def from_dict(obj: dict) -> 'Track':
+    def from_dict(obj: dict) -> "Track":
         album = obj["album"]
         artists = obj["artists"]
         available_markets = obj["available_markets"]
@@ -41,7 +40,25 @@ class Track:
         track_number = obj["track_number"]
         type = obj["type"]
         uri = obj["uri"]
-        return Track(album, artists, available_markets, disc_number, duration_ms, explicit, external_ids, external_urls, href, id, is_local, name, popularity, preview_url, track_number, type, uri)
+        return Track(
+            album,
+            artists,
+            available_markets,
+            disc_number,
+            duration_ms,
+            explicit,
+            external_ids,
+            external_urls,
+            href,
+            id,
+            is_local,
+            name,
+            popularity,
+            preview_url,
+            track_number,
+            type,
+            uri,
+        )
 
     def title_for_slack(self) -> str:
         artist_name_list = [artist["name"] for artist in self.artists]
@@ -49,5 +66,5 @@ class Track:
         return f"{artist_names} - {self.name}"
 
     @property
-    def spotify_url(self) -> Optional[str]:
+    def spotify_url(self) -> str | None:
         return self.external_urls["spotify"]

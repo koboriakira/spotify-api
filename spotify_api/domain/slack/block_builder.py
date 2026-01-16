@@ -1,15 +1,12 @@
-from dataclasses import dataclass, field
-from typing import Optional
 import json
-import logging
-
+from dataclasses import dataclass, field
 
 
 @dataclass(frozen=True)
 class BlockBuilder:
     blocks: list[dict] = field(default_factory=list)
 
-    def add_checkboxes(self, action_id: str, header: str, options: list[dict[str, str]]) -> 'BlockBuilder':
+    def add_checkboxes(self, action_id: str, header: str, options: list[dict[str, str]]) -> "BlockBuilder":
         """チェックボックスを追加する
 
         Args:
@@ -20,29 +17,18 @@ class BlockBuilder:
         Returns:
             BlockBuilder:
         """
-        accessory_options = [{
-            "text": {
-                "type": "mrkdwn",
-                "text": option["text"]
-            },
-            "value": option["value"]
-        } for option in options]
+        accessory_options = [
+            {"text": {"type": "mrkdwn", "text": option["text"]}, "value": option["value"]} for option in options
+        ]
 
         block = {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": header
-            },
-            "accessory": {
-                "type": "checkboxes",
-                "options": accessory_options,
-                "action_id": action_id
-            }
+            "text": {"type": "mrkdwn", "text": header},
+            "accessory": {"type": "checkboxes", "options": accessory_options, "action_id": action_id},
         }
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_checkboxes_action(self, action_id: str, options: list[dict[str, str]]) -> 'BlockBuilder':
+    def add_checkboxes_action(self, action_id: str, options: list[dict[str, str]]) -> "BlockBuilder":
         """チェックボックスを追加する (アクション用)
 
         Args:
@@ -55,99 +41,83 @@ class BlockBuilder:
         """
         element_options = []
         for option in options:
-            element_option = {
-                "text": {
-                    "type": "plain_text",
-                    "text": option["text"]
-                },
-                "value": option["value"]
-            }
+            element_option = {"text": {"type": "plain_text", "text": option["text"]}, "value": option["value"]}
             if "description" in option:
-                element_option["description"] = {
-                    "type": "mrkdwn",
-                    "text": option["description"]
-                }
+                element_option["description"] = {"type": "mrkdwn", "text": option["description"]}
             element_options.append(element_option)
 
         block = {
             "type": "actions",
-            "elements": [
-                {
-                    "type": "checkboxes",
-                    "options": element_options,
-                    "action_id": action_id
-                }
-            ],
+            "elements": [{"type": "checkboxes", "options": element_options, "action_id": action_id}],
         }
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_plain_text_input(self, action_id: str, label: str, multiline: bool = False, optional=False) -> 'BlockBuilder':
+    def add_plain_text_input(
+        self, action_id: str, label: str, multiline: bool = False, optional=False
+    ) -> "BlockBuilder":
         block = {
             "type": "input",
-            "element": {
-                "type": "plain_text_input",
-                "multiline": multiline,
-                "action_id": action_id
-            },
+            "element": {"type": "plain_text_input", "multiline": multiline, "action_id": action_id},
             "label": {
                 "type": "plain_text",
                 "text": label,
             },
-            "optional": optional
+            "optional": optional,
         }
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_multi_static_select(self, action_id: str, options: list[dict[str, str]], label: str = "選択", placeholder: str = "選択してください", optional: bool = False) -> 'BlockBuilder':
-        return self.add_static_select(action_id=action_id, options=options, label=label, placeholder=placeholder, is_multi=True, optional=optional)
+    def add_multi_static_select(
+        self,
+        action_id: str,
+        options: list[dict[str, str]],
+        label: str = "選択",
+        placeholder: str = "選択してください",
+        optional: bool = False,
+    ) -> "BlockBuilder":
+        return self.add_static_select(
+            action_id=action_id, options=options, label=label, placeholder=placeholder, is_multi=True, optional=optional
+        )
 
-    def add_static_select(self, action_id: str, options: list[dict[str, str]], label: str = "選択", placeholder: str = "選択してください", is_multi: bool = False, optional: bool = False) -> 'BlockBuilder':
-        element_options = [{
-            "text": {
-                "type": "plain_text",
-                "text": option["text"]
-            },
-            "value": option["value"]
-        } for option in options]
+    def add_static_select(
+        self,
+        action_id: str,
+        options: list[dict[str, str]],
+        label: str = "選択",
+        placeholder: str = "選択してください",
+        is_multi: bool = False,
+        optional: bool = False,
+    ) -> "BlockBuilder":
+        element_options = [
+            {"text": {"type": "plain_text", "text": option["text"]}, "value": option["value"]} for option in options
+        ]
         block = {
             "type": "input",
             "element": {
                 "type": "multi_static_select" if is_multi else "static_select",
-                "placeholder": {
-                    "type": "plain_text",
-                    "text": placeholder
-                },
+                "placeholder": {"type": "plain_text", "text": placeholder},
                 "options": element_options,
-                "action_id": action_id
+                "action_id": action_id,
             },
-            "label": {
-                "type": "plain_text",
-                "text": label
-            },
-            "optional": optional
+            "label": {"type": "plain_text", "text": label},
+            "optional": optional,
         }
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_datepicker(self, action_id: str, header: str, placeholder: str, initial_date: Optional[str] = None) -> 'BlockBuilder':
+    def add_datepicker(
+        self, action_id: str, header: str, placeholder: str, initial_date: str | None = None
+    ) -> "BlockBuilder":
         accessory = {
             "type": "datepicker",
             "action_id": action_id,
             "initial_date": initial_date,
-            "placeholder": {
-                "type": "plain_text",
-                "text": placeholder
-            }
+            "placeholder": {"type": "plain_text", "text": placeholder},
         }
-        block = {
-            "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": header
-            },
-            "accessory": accessory
-        }
+        block = {"type": "section", "text": {"type": "mrkdwn", "text": header}, "accessory": accessory}
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_timepicker(self, action_id: str, placeholder: str, initial_time: Optional[str] = None, label: Optional[str] = None) -> 'BlockBuilder':
+    def add_timepicker(
+        self, action_id: str, placeholder: str, initial_time: str | None = None, label: str | None = None
+    ) -> "BlockBuilder":
         element = {
             "type": "timepicker",
             "initial_time": initial_time,
@@ -155,7 +125,7 @@ class BlockBuilder:
                 "type": "plain_text",
                 "text": placeholder,
             },
-            "action_id": action_id
+            "action_id": action_id,
         }
         block = {
             "type": "input",
@@ -168,62 +138,41 @@ class BlockBuilder:
             }
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_mrkdwn_section(self, text: str) -> 'BlockBuilder':
-        block = {
-            "type": "section",
-            "block_id": "mrkdwn-section",
-            "text": {
-                "type": "mrkdwn",
-                "text": text
-            }
-        }
+    def add_mrkdwn_section(self, text: str) -> "BlockBuilder":
+        block = {"type": "section", "block_id": "mrkdwn-section", "text": {"type": "mrkdwn", "text": text}}
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_divider(self) -> 'BlockBuilder':
-        block = {
-            "type": "divider"
-        }
+    def add_divider(self) -> "BlockBuilder":
+        block = {"type": "divider"}
         return BlockBuilder(blocks=self.blocks + [block])
 
-    def add_button_action(self, action_id: str, text: str, value: str, style: str = "default") -> 'BlockBuilder':
+    def add_button_action(self, action_id: str, text: str, value: str, style: str = "default") -> "BlockBuilder":
         element = {
             "type": "button",
-            "text": {
-                "type": "plain_text",
-                "text": text
-            },
+            "text": {"type": "plain_text", "text": text},
             "style": style,
             "value": value,
             "action_id": action_id,
         }
 
-        block = {
-            "type": "actions",
-            "elements": [element]
-        }
+        block = {"type": "actions", "elements": [element]}
         return BlockBuilder(blocks=self.blocks + [block])
 
     # 以下、ちょっと勘違いして作ったメソッドかも。
 
-    def add_section(self, text: str) -> 'BlockBuilder':
+    def add_section(self, text: str) -> "BlockBuilder":
         section_block = {
             "type": "section",
-            "text": {
-                "type": "mrkdwn",
-                "text": text
-            },
+            "text": {"type": "mrkdwn", "text": text},
         }
         return BlockBuilder(blocks=self.blocks + [section_block])
 
-    def add_context(self, text: str | dict) -> 'BlockBuilder':
+    def add_context(self, text: str | dict) -> "BlockBuilder":
         context_block = {
             "type": "context",
             "elements": [
-                {
-                    "type": "plain_text",
-                    "text": json.dumps(text, ensure_ascii=False) if isinstance(text, dict) else text
-                }
-            ]
+                {"type": "plain_text", "text": json.dumps(text, ensure_ascii=False) if isinstance(text, dict) else text}
+            ],
         }
         return BlockBuilder(blocks=self.blocks + [context_block])
 

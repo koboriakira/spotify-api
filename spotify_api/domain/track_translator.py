@@ -2,7 +2,6 @@ from domain.model.track import Track
 
 
 class TrackTranslator:
-
     @staticmethod
     def from_entity(obj: dict) -> Track:
         album = obj["album"]
@@ -22,4 +21,22 @@ class TrackTranslator:
         track_number = obj["track_number"]
         type = obj["type"]
         uri = obj["uri"]
-        return Track(album, artists, available_markets, disc_number, duration_ms, explicit, external_ids, external_urls, href, id, is_local, name, popularity, preview_url, track_number, type, uri)
+        return Track(
+            album,
+            artists,
+            available_markets,
+            disc_number,
+            duration_ms,
+            explicit,
+            external_ids,
+            external_urls,
+            href,
+            id,
+            is_local,
+            name,
+            popularity,
+            preview_url,
+            track_number,
+            type,
+            uri,
+        )

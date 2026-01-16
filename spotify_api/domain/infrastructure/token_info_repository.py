@@ -1,5 +1,5 @@
 from abc import ABCMeta, abstractmethod
-from typing import Optional
+
 
 class TokenInfoRepository(metaclass=ABCMeta):
     """
@@ -14,7 +14,7 @@ class TokenInfoRepository(metaclass=ABCMeta):
         pass
 
     @abstractmethod
-    def load(self) -> Optional[dict]:
+    def load(self) -> dict | None:
         """
         トークン情報を取得する
         """
