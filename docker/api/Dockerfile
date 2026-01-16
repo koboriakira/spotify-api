@@ -2,13 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /workspace
 
-# install git
+# Install git and curl (for uv installation)
 RUN apt update && \
-  apt install -y git
-RUN apt clean
+    apt install -y git curl && \
+    apt clean
+
+# Install uv
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Python dependencies
-RUN pip install --upgrade pip && \
-    pip install pipenv
-COPY Pipfile ./
-RUN pipenv install --dev
+COPY pyproject.toml ./
+RUN uv sync --frozen --no-dev || uv sync --no-dev
