@@ -1,9 +1,9 @@
-from custom_logger import get_logger
-from domain.model.track import Track
-from domain.slack.block_builder import BlockBuilder
-from infrastructure.spotipy import Spotipy
-from service.authorization_service import AuthorizationService
-from util.datetime import get_current_day_and_tomorrow
+from ..custom_logger import get_logger
+from ..domain.model.track import Track
+from ..domain.slack.block_builder import BlockBuilder
+from ..infrastructure.spotipy import Spotipy
+from ..service.authorization_service import AuthorizationService
+from ..util.datetime import get_current_day_and_tomorrow
 
 logger = get_logger(__name__)
 

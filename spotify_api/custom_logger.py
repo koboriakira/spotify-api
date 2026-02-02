@@ -1,7 +1,7 @@
 import logging
 from logging import Logger
 
-from util.environment import Environment
+from .util.environment import Environment
 
 LOG_FILE_NAME = "app.log"
 

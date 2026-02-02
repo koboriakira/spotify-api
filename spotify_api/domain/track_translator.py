@@ -1,4 +1,4 @@
-from domain.model.track import Track
+from .model.track import Track
 
 
 class TrackTranslator:

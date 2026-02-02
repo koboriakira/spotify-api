@@ -11,5 +11,5 @@ RUN apt update && \
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Python dependencies
-COPY pyproject.toml ./
-RUN uv sync --frozen --no-dev || uv sync --no-dev
+COPY pyproject.toml README.md ./
+RUN uv sync --frozen --all-extras || uv sync --all-extras

@@ -3,8 +3,8 @@ from typing import Any, cast
 
 import boto3
 from botocore.exceptions import NoCredentialsError
-from custom_logger import get_logger
-from domain.infrastructure.token_info_repository import TokenInfoRepository
+from ..custom_logger import get_logger
+from ..domain.infrastructure.token_info_repository import TokenInfoRepository
 
 BUCKET_NAME = "spotify-api-bucket-koboriakira"
 FILE_NAME = "token_info.json"

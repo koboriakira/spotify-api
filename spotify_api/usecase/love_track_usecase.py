@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from infrastructure.spotipy import Spotipy
-from service.authorization_service import AuthorizationService
+from ..infrastructure.spotipy import Spotipy
+from ..service.authorization_service import AuthorizationService
 
 
 class LoveTrackResult(Enum):

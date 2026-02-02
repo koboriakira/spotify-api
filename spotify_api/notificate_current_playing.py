@@ -1,4 +1,4 @@
-from interface import track
+from .interface import track
 
 
 def handler(event, context):

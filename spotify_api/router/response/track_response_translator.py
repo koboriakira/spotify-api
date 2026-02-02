@@ -1,7 +1,7 @@
 from datetime import date as DateObject
 
-from domain.model.track import Track as TrackEntity
-from router.response.track_response import Track
+from ...domain.model.track import Track as TrackEntity
+from .track_response import Track
 
 
 class TrackResponseTranslator:

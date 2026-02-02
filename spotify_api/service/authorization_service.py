@@ -1,9 +1,9 @@
 from datetime import datetime as DateTime
 from typing import cast
 
-from custom_logger import get_logger
-from domain.infrastructure.token_info_repository import TokenInfoRepository
-from infrastructure.spotify_oauth import SpotifyOauth
+from ..custom_logger import get_logger
+from ..domain.infrastructure.token_info_repository import TokenInfoRepository
+from ..infrastructure.spotify_oauth import SpotifyOauth
 
 logger = get_logger(__name__)
 
@@ -16,7 +16,7 @@ class AuthorizationService:
     def get_access_token(self) -> str:
         token_info = self.token_repository.load()
         if token_info is None:
-            raise Exception("token_info is not found")
+            raise Exception("Spotify token not found. Please authorize first by accessing /authorize endpoint")
 
         expires_at = token_info["expires_at"]
         if expires_at < DateTime.now().timestamp():

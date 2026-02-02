@@ -1,8 +1,8 @@
 import json
 from typing import Any, cast
 
-from custom_logger import get_logger
-from domain.infrastructure.token_info_repository import TokenInfoRepository
+from ..custom_logger import get_logger
+from ..domain.infrastructure.token_info_repository import TokenInfoRepository
 
 FILE_NAME = "token_info.json"
 FILE_PATH = "/tmp/" + FILE_NAME
@@ -25,9 +25,13 @@ class TokenInfoLocalRepository(TokenInfoRepository):
         トークン情報を取得する
         """
         # token_info.jsonを読み込み
-        with open(FILE_PATH) as f:
-            token_info = json.load(f)
-        return cast(dict[str, Any], token_info)
+        try:
+            with open(FILE_PATH) as f:
+                token_info = json.load(f)
+            return cast(dict[str, Any], token_info)
+        except FileNotFoundError:
+            logger.warning(f"Token file not found: {FILE_PATH}")
+            return None
 
 
 if __name__ == "__main__":

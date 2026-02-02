@@ -1,7 +1,7 @@
 import spotipy
-from custom_logger import get_logger
-from domain.model.track import Track
-from domain.track_translator import TrackTranslator
+from ..custom_logger import get_logger
+from ..domain.model.track import Track
+from ..domain.track_translator import TrackTranslator
 
 logger = get_logger(__name__)
 

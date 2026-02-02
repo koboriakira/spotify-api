@@ -1,7 +1,5 @@
 # @format
 
-version: "3.0"
-
 services:
   api:
     container_name: "spotify-api"
@@ -12,8 +10,8 @@ services:
       dockerfile: docker/api/Dockerfile
     env_file:
       - .env
-    working_dir: /workspace/spotify_api
-    command: uv run uvicorn main:app --reload --port=8080 --host=0.0.0.0
+    working_dir: /workspace
+    command: bash -c "uv sync --all-extras && uv run uvicorn spotify_api.main:app --reload --port=8080 --host=0.0.0.0"
     ports:
       - 10120:8080
     tty: true

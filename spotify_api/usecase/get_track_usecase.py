@@ -1,6 +1,6 @@
-from domain.model.track import Track
-from infrastructure.spotipy import Spotipy
-from service.authorization_service import AuthorizationService
+from ..domain.model.track import Track
+from ..infrastructure.spotipy import Spotipy
+from ..service.authorization_service import AuthorizationService
 
 
 class GetTrackUsecase:

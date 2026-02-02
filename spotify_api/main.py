@@ -1,9 +1,9 @@
-from custom_logger import get_logger
+from .custom_logger import get_logger
 from fastapi import FastAPI
 from mangum import Mangum
-from router import authorize as authorize_router
-from router import current as current_router
-from router import track as track_router
+from .router import authorize as authorize_router
+from .router import current as current_router
+from .router import track as track_router
 
 logger = get_logger(__name__)
 logger.info("start")

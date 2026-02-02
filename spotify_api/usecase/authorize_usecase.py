@@ -1,8 +1,8 @@
 from typing import Any
 
-from custom_logger import get_logger
-from domain.infrastructure.token_info_repository import TokenInfoRepository
-from infrastructure.spotify_oauth import SpotifyOauth
+from ..custom_logger import get_logger
+from ..domain.infrastructure.token_info_repository import TokenInfoRepository
+from ..infrastructure.spotify_oauth import SpotifyOauth
 
 logger = get_logger(__name__)
 

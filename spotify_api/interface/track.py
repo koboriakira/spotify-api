@@ -1,11 +1,11 @@
-from domain.model.track import Track
-from infrastructure.token_info_local_repository import TokenInfoLocalRepository
-from infrastructure.token_info_s3_repository import TokenInfoS3Repository
-from service.authorization_service import AuthorizationService
-from usecase.current_playing_usecase import CurrentPlayingUsecase
-from usecase.get_track_usecase import GetTrackUsecase
-from usecase.love_track_usecase import LoveTrackResponse, LoveTrackUsecase
-from util.environment import Environment
+from ..domain.model.track import Track
+from ..infrastructure.token_info_local_repository import TokenInfoLocalRepository
+from ..infrastructure.token_info_s3_repository import TokenInfoS3Repository
+from ..service.authorization_service import AuthorizationService
+from ..usecase.current_playing_usecase import CurrentPlayingUsecase
+from ..usecase.get_track_usecase import GetTrackUsecase
+from ..usecase.love_track_usecase import LoveTrackResponse, LoveTrackUsecase
+from ..util.environment import Environment
 
 if Environment.is_dev() or Environment.is_local():
     repository = TokenInfoLocalRepository()

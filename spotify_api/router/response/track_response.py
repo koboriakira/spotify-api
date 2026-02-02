@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from router.response.base_response import BaseResponse
+from .base_response import BaseResponse
 
 
 class Track(BaseModel):
